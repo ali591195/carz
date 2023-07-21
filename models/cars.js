@@ -31,7 +31,6 @@ const Cars = sequelize.define(
     sequelize,
     tableName: "cars",
     timestamps: true,
-    paranoid: true,
     indexes: [
       {
         name: "PRIMARY",

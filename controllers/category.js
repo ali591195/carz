@@ -15,7 +15,6 @@ const createCategory = asyncHandler(async (req, res) => {
   }
 
   try {
-    console.log("Working");
     // check if category exist or not
     const categoryExists = await Categories.findOne({
       where: {

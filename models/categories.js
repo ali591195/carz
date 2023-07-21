@@ -22,7 +22,6 @@ const Categories = sequelize.define(
     sequelize,
     tableName: "categories",
     timestamps: true,
-    paranoid: true,
     indexes: [
       {
         name: "PRIMARY",

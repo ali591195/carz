@@ -31,7 +31,6 @@ const Users = sequelize.define(
     sequelize,
     tableName: "users",
     timestamps: true,
-    paranoid: true,
     indexes: [
       {
         name: "PRIMARY",
