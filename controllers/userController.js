@@ -113,6 +113,18 @@ const getUser = asyncHandler(async (req, res) => {
 });
 
 //------------------------Helper functions--------------------------
+// find user with email address
+function findUser(email) {
+  return Users.findOne({
+    where: { email: email },
+  })
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+}
 
 // create user
 async function userCreation(userDetail) {

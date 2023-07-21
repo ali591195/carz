@@ -1,14 +1,15 @@
 const express = require("express");
-const sync = require("./routes/sync");
-const sequelize = require("./config/database");
-const user = require("./routes/users/users");
 var cors = require("cors");
-const { errorHandler } = require("./middleware/errorMiddleware");
-const category = require("./routes/category/category");
-const seeder = require("./routes/seeder/seeder");
-const car = require("./routes/cars");
-const { association } = require("./controllers/association");
 require("dotenv").config();
+
+const car = require("./routes/cars");
+const sync = require("./routes/sync");
+const user = require("./routes/users");
+const seeder = require("./routes/seeder");
+const category = require("./routes/category");
+const sequelize = require("./config/database");
+const { association } = require("./controllers/association");
+const { errorHandler } = require("./middleware/errorMiddleware");
 
 app = express();
 
@@ -16,7 +17,9 @@ app.use(express.static("public"));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
+
 association();
+
 app.use("/api/sync-database", sync);
 app.use("/api/users", user);
 app.use("/api/category", category);

@@ -1,7 +1,4 @@
 const express = require("express");
-const route = express.Router();
-
-const { protect } = require("../../middleware/authMiddleware");
 const { body, param } = require("express-validator");
 
 const {
@@ -10,7 +7,10 @@ const {
   deleteCategory,
   getCategories,
   getTotalCars,
-} = require("../../controllers/category");
+} = require("../controllers/category");
+const { protect } = require("../middleware/authMiddleware");
+
+const route = express.Router();
 
 route.post(
   "/",
@@ -36,7 +36,6 @@ route.delete(
   deleteCategory
 );
 route.get(`/`, protect, getCategories);
-
 route.get(`/total`, protect, getTotalCars);
 
 module.exports = route;

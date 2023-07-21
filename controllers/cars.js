@@ -84,7 +84,7 @@ const updateCar = asyncHandler(async (req, res) => {
         id: carExist.id,
       },
     });
-    if (!result || carDetails[0] === 0) {
+    if (!result || result[0] === 0) {
       res.status(400);
       throw new Error("Something went wrong! Car could not be updated.");
     }

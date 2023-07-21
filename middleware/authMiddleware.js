@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
 const asyncHandler = require("express-async-handler");
 
 const { Users } = require("../models/users");
@@ -15,7 +16,10 @@ const protect = asyncHandler(async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       //Get user from token
-      req.result = await Users.findByPk(decoded.id, {
+      req.result = await Users.findOne({
+        where: {
+          [Op.and]: [{ id: decoded.id }],
+        },
         attributes: { exclude: ["password"] },
       });
       if (!req.result) {
@@ -27,9 +31,10 @@ const protect = asyncHandler(async (req, res, next) => {
       throw new Error(err);
     }
   }
-
-  res.status(401);
-  throw new Error("Not authorized, no token.");
+  if (!token) {
+    res.status(401);
+    throw new Error("Not authorized, no token.");
+  }
 });
 
 module.exports = {

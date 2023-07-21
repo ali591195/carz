@@ -1,6 +1,8 @@
 const express = require("express");
-const router = express.Router();
+
 const { syncDatabase } = require("../controllers/syncController");
+
+const router = express.Router();
 
 //endpoint to sync database
 router.get("/", async (req, res) => {

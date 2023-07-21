@@ -1,13 +1,14 @@
 const express = require("express");
-const route = express.Router();
-const { protect } = require("../../middleware/authMiddleware");
 const { body } = require("express-validator");
 
 const {
   createUser,
   loginUser,
   getUser,
-} = require("../../controllers/userController");
+} = require("../controllers/userController");
+const { protect } = require("../middleware/authMiddleware");
+
+const route = express.Router();
 
 route.post(
   "/login",
@@ -39,7 +40,6 @@ route.post(
   ],
   createUser
 );
-
 route.get("/", protect, getUser);
 
 module.exports = route;

@@ -1,7 +1,5 @@
 const express = require("express");
-const route = express.Router();
 
-const { protect } = require("../middleware/authMiddleware");
 const { body, param } = require("express-validator");
 
 const {
@@ -10,6 +8,9 @@ const {
   deleteCar,
   getCars,
 } = require("../controllers/cars");
+const { protect } = require("../middleware/authMiddleware");
+
+const route = express.Router();
 
 route.post(
   "/",
