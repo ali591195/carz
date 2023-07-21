@@ -29,8 +29,8 @@ app.use("/api/sync-database", sync);
 app.use("/api/users", user);
 app.use("/api/category", category);
 app.use("/api/car", car);
-
 app.use("/api/seeder", seeder);
+
 app.use("/api/store", store);
 app.use("/api/shipping_charges", shippingCharges);
 app.use("/api/market_place", marketPlace);
