@@ -1,10 +1,12 @@
 const asyncHandler = require("express-async-handler");
+
 const { Categories } = require("../models/categories");
 
 // @desc Store data in database
 // @route GET /api/Seeder
 // @access Public
 const saveSeeder = asyncHandler(async (req, res) => {
+  // categories default data
   const categoriesData = [
     { name: "Bus" },
     { name: "Sedan" },
@@ -13,7 +15,7 @@ const saveSeeder = asyncHandler(async (req, res) => {
   ];
 
   try {
-    //create marketplaces
+    //create categories
     const categories = await Categories.bulkCreate(categoriesData);
     if (!categories) {
       const message = "Categories could not be created.";
@@ -21,8 +23,9 @@ const saveSeeder = asyncHandler(async (req, res) => {
       throw new Error(message);
     }
 
-    return res.status(200).json({ message: "Successfully added" });
+    return res.status(200).send("Successfully added");
   } catch (error) {
+    //error handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${

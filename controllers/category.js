@@ -1,8 +1,9 @@
 const { literal } = require("sequelize");
 const asyncHandler = require("express-async-handler");
-const { Categories, validateCategory } = require("../models/categories");
 const { validationResult } = require("express-validator");
+
 const { Cars } = require("../models/cars");
+const { Categories, validateCategory } = require("../models/categories");
 
 // @desc Create new category
 // @route POST /api/category
@@ -35,7 +36,7 @@ const createCategory = asyncHandler(async (req, res) => {
       throw new Error("Category could not be created.");
     }
 
-    return res.status(200).json({ message: "Category created successfully!" });
+    return res.status(200).send("Category created successfully!");
   } catch (error) {
     //error handling
     res.status(res.statusCode ? res.statusCode : 500);
@@ -88,7 +89,7 @@ const updateCategory = asyncHandler(async (req, res) => {
       throw new Error("Something went wrong! Category could not be updated.");
     }
 
-    return res.status(200).json({ message: "Category updated successfully!" });
+    return res.status(200).send("Category updated successfully!");
   } catch (error) {
     //error handling
     res.status(res.statusCode ? res.statusCode : 500);
@@ -121,19 +122,20 @@ const deleteCategory = asyncHandler(async (req, res) => {
       throw new Error("The category ID you entered does not exist");
     }
 
-    //update category
-    const categoryDetails = await Categories.destroy({
+    //delete category
+    const result = await Categories.destroy({
       where: {
         id: category.id,
       },
     });
-    if (!categoryDetails) {
+    if (!result) {
       res.status(400);
       throw new Error("Something went wrong! Category could not be deleted.");
     }
 
-    return res.status(200).json({ message: "Category deleted successfully!" });
+    return res.status(200).send("Category deleted successfully!");
   } catch (error) {
+    //error handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${
@@ -145,7 +147,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Get all category
+// @desc Get all categories
 // @route GET /api/category/
 const getCategories = asyncHandler(async (req, res) => {
   try {
@@ -156,6 +158,7 @@ const getCategories = asyncHandler(async (req, res) => {
 
     return res.status(200).send(categories);
   } catch (error) {
+    //error handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${
@@ -167,9 +170,11 @@ const getCategories = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Get total cars for all categories
+// @route GET /api/category/
 const getTotalCars = asyncHandler(async (req, res) => {
   try {
-    //get all categories
+    //get all categories name and total cars
     const categories = await Categories.findAll({
       include: {
         model: Cars,
@@ -185,6 +190,7 @@ const getTotalCars = asyncHandler(async (req, res) => {
 
     return res.status(200).send(categories);
   } catch (error) {
+    //error handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${

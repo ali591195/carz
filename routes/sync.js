@@ -6,7 +6,7 @@ const { syncDatabase } = require("../controllers/syncController");
 router.get("/", async (req, res) => {
   try {
     await syncDatabase();
-    return res.status(200).send("synced successfully");
+    return res.status(200).send("Synced successfully");
   } catch (error) {
     console.log("Failed to sync Table" + error);
     return res.status(500).send("Failed to sync  Table" + error);

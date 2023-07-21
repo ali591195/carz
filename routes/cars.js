@@ -20,6 +20,28 @@ route.post(
       .trim()
       .escape()
       .withMessage("Please enter category id"),
+    body("reg_no")
+      .isString()
+      .trim()
+      .escape()
+      .withMessage("Please enter a reg_no"),
+    body("model")
+      .isString()
+      .trim()
+      .escape()
+      .withMessage("Please enter a model"),
+    body("make")
+      .isString()
+      .trim()
+      .escape()
+      .withMessage("Please enter a make")
+      .optional(),
+    body("color")
+      .isString()
+      .trim()
+      .escape()
+      .withMessage("Please enter a color")
+      .optional(),
     protect,
   ],
   createCar
@@ -33,6 +55,28 @@ route.put(
       .trim()
       .escape()
       .withMessage("Please enter category id"),
+    body("reg_no")
+      .isString()
+      .trim()
+      .escape()
+      .withMessage("Please enter a reg_no"),
+    body("model")
+      .isString()
+      .trim()
+      .escape()
+      .withMessage("Please enter a model"),
+    body("make")
+      .isString()
+      .trim()
+      .escape()
+      .withMessage("Please enter a make")
+      .optional(),
+    body("color")
+      .isString()
+      .trim()
+      .escape()
+      .withMessage("Please enter a color")
+      .optional(),
     param("id").isUUID(4).withMessage("Please enter a valid category id"),
   ],
   protect,

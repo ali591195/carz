@@ -1,7 +1,8 @@
 const asyncHandler = require("express-async-handler");
+
+const { Categories } = require("../models/categories");
 const { Cars, validateCars } = require("../models/cars");
 const { validationResult } = require("express-validator");
-const { Categories } = require("../models/categories");
 
 // @desc Create new cars
 // @route POST /api/cars
@@ -88,7 +89,7 @@ const updateCar = asyncHandler(async (req, res) => {
       throw new Error("Something went wrong! Car could not be updated.");
     }
 
-    return res.status(200).json({ message: "Car updated successfully!" });
+    return res.status(200).send("Car updated successfully!");
   } catch (error) {
     //error Handling
     res.status(res.statusCode ? res.statusCode : 500);
@@ -133,7 +134,7 @@ const deleteCar = asyncHandler(async (req, res) => {
       throw new Error("Something went wrong! Cars could not be deleted.");
     }
 
-    return res.status(200).json({ message: "Cars deleted successfully!" });
+    return res.status(200).send("Cars deleted successfully!");
   } catch (error) {
     //error handling
     res.status(res.statusCode ? res.statusCode : 500);
