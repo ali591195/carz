@@ -21,7 +21,7 @@ const { Categorys } = require("../models/categories");
 const { VatReferralJunctions } = require("../models/vatReferralJunction");
 const { validationResult } = require("express-validator");
 // generate token after login
-const generateToken = (user, permissions) => {
+const generateToken = (user) => {
   return jwt.sign(
     {
       id: user.id,

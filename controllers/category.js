@@ -8,11 +8,11 @@ const { Cars } = require("../models/cars");
 // @route POST /api/category
 // @access Private
 const createCategory = asyncHandler(async (req, res) => {
-  const categoryDetails = req.body;
+  const category = req.body;
 
-  //validate categoryDetails
-  if (categoryDetails) {
-    const { error } = validateCategory(categoryDetails);
+  //validate category
+  if (category) {
+    const { error } = validateCategory(category);
     if (error) return res.status(400).send(error.details[0].message);
   }
 
@@ -20,24 +20,24 @@ const createCategory = asyncHandler(async (req, res) => {
     // check if category exist or not
     const categoryExists = await Categories.findOne({
       where: {
-        name: categoryDetails.name,
+        name: category.name,
       },
     });
-
     if (categoryExists) {
       res.status(400);
       throw new Error("Category already exists with same name");
     }
 
     //create category
-    const category = await Categories.create(categoryDetails);
-    if (!category) {
+    const result = await Categories.create(category);
+    if (!result) {
       res.status(400);
       throw new Error("Category could not be created.");
     }
 
     return res.status(200).json({ message: "Category created successfully!" });
   } catch (error) {
+    //error handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${
@@ -59,42 +59,38 @@ const updateCategory = asyncHandler(async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const categoryDetail = req.body;
+  const category = req.body;
 
-  //validate categoryDetail
-  if (categoryDetail) {
-    const { error } = validateCategory(categoryDetail);
+  //validate category
+  if (category) {
+    const { error } = validateCategory(category);
     if (error) return res.status(400).send(error.details[0].message);
   }
 
-  categoryDetail.updated_by = req.result.id;
+  category.updated_by = req.result.id;
 
   try {
-    //check if market-place exist
-    const categoryExistsById = await Categories.findOne({
-      where: {
-        id: req.params.id,
-      },
-    });
-
-    if (!categoryExistsById) {
+    //check if category exist
+    const categoryExists = await Categories.findByPk(req.params.id);
+    if (!categoryExists) {
       res.status(400);
       throw new Error("The category ID you entered does not exist");
     }
 
     //update category
-    const categoryDetails = await Categories.update(categoryDetail, {
+    const result = await Categories.update(category, {
       where: {
-        id: categoryExistsById.id,
+        id: categoryExists.id,
       },
     });
-    if (!categoryDetails || categoryDetails[0] === 0) {
+    if (!result || result[0] === 0) {
       res.status(400);
       throw new Error("Something went wrong! Category could not be updated.");
     }
 
     return res.status(200).json({ message: "Category updated successfully!" });
   } catch (error) {
+    //error handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${
@@ -117,14 +113,10 @@ const deleteCategory = asyncHandler(async (req, res) => {
   }
 
   try {
-    //check if market-place exist
-    const categoryExistsById = await Categories.findOne({
-      where: {
-        id: req.params.id,
-      },
-    });
+    //check if category exist
+    const category = await Categories.findByPk(req.params.id);
 
-    if (!categoryExistsById) {
+    if (!category) {
       res.status(400);
       throw new Error("The category ID you entered does not exist");
     }
@@ -132,7 +124,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
     //update category
     const categoryDetails = await Categories.destroy({
       where: {
-        id: categoryExistsById.id,
+        id: category.id,
       },
     });
     if (!categoryDetails) {

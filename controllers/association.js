@@ -2,7 +2,7 @@ const { Cars } = require("../models/cars");
 const { Categories } = require("../models/categories");
 
 const association = () => {
-  //Cars to Categories
+  //Cars & Category Association
   Categories.hasMany(Cars, {
     as: "category_has_car",
     foreignKey: "category_id",
@@ -12,6 +12,7 @@ const association = () => {
     foreignKey: "category_id",
   });
 };
+
 module.exports = {
   association,
 };

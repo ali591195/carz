@@ -26,6 +26,22 @@ const Cars = sequelize.define(
         key: "id",
       },
     },
+    reg_no: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      required: true,
+    },
+    model: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      required: true,
+    },
+    make: {
+      type: DataTypes.STRING(50),
+    },
+    color: {
+      type: DataTypes.STRING(50),
+    },
   },
   {
     sequelize,
@@ -50,6 +66,10 @@ function validateCars(car) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
     category_id: Joi.string().guid().required(),
+    reg_no: Joi.string().min(3).max(50).required(),
+    model: Joi.string().min(3).max(50).required(),
+    make: Joi.string().min(3).max(50),
+    color: Joi.string().min(3).max(50),
   });
   return schema.validate(car);
 }

@@ -7,36 +7,32 @@ const { Categories } = require("../models/categories");
 // @route POST /api/cars
 // @access Private
 const createCar = asyncHandler(async (req, res) => {
-  const carDetails = req.body;
+  const car = req.body;
 
-  //validate carDetails
-  if (carDetails) {
-    const { error } = validateCars(carDetails);
+  //validate car
+  if (car) {
+    const { error } = validateCars(car);
     if (error) return res.status(400).send(error.details[0].message);
   }
 
   try {
     // check if car's category exist or not
-    const categoryExist = await Categories.findOne({
-      where: {
-        id: carDetails.category_id,
-      },
-    });
-
-    if (!categoryExist) {
+    const category = await Categories.findByPk(car.category_id);
+    if (!category) {
       res.status(400);
       throw new Error("Category Id does not exist");
     }
 
     //create category
-    const car = await Cars.create(carDetails);
-    if (!car) {
+    const result = await Cars.create(car);
+    if (!result) {
       res.status(400);
       throw new Error("Car could not be created.");
     }
 
-    return res.status(200).json({ message: "Car created successfully!" });
+    return res.status(200).send("Car created successfully!");
   } catch (error) {
+    //Error Handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${
@@ -46,7 +42,7 @@ const createCar = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Updat cars
+// @desc Update cars
 // @route PUT /api/cars/:id
 // @access Private
 const updateCar = asyncHandler(async (req, res) => {
@@ -56,53 +52,45 @@ const updateCar = asyncHandler(async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const carDetail = req.body;
+  const car = req.body;
 
-  //validate carDetail
-  if (carDetail) {
-    const { error } = validateCars(carDetail);
+  //validate car
+  if (car) {
+    const { error } = validateCars(car);
     if (error) return res.status(400).send(error.details[0].message);
   }
 
-  carDetail.updated_by = req.result.id;
+  car.updated_by = req.result.id;
 
   try {
-    //check if market-place exist
-    const carExistById = await Cars.findOne({
-      where: {
-        id: req.params.id,
-      },
-    });
-
-    if (!carExistById) {
+    //check if car exist
+    const carExist = await Cars.findByPk(req.params.id);
+    if (!carExist) {
       res.status(400);
       throw new Error("The category ID you entered does not exist");
     }
 
-    const categoryExist = await Categories.findOne({
-      where: {
-        id: carDetail.category_id,
-      },
-    });
-
-    if (!categoryExist) {
+    //check if category exist
+    const category = await Categories.findByPk(car.category_id);
+    if (!category) {
       res.status(400);
       throw new Error("Category Id does not exist");
     }
 
     //update car
-    const carDetails = await Cars.update(carDetail, {
+    const result = await Cars.update(car, {
       where: {
-        id: carExistById.id,
+        id: carExist.id,
       },
     });
-    if (!carDetails || carDetails[0] === 0) {
+    if (!result || carDetails[0] === 0) {
       res.status(400);
       throw new Error("Something went wrong! Car could not be updated.");
     }
 
     return res.status(200).json({ message: "Car updated successfully!" });
   } catch (error) {
+    //error Handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${
@@ -123,31 +111,31 @@ const deleteCar = asyncHandler(async (req, res) => {
   }
 
   try {
-    //check if market-place exist
-    const carExistById = await Cars.findOne({
+    //check if car exist
+    const car = await Cars.findOne({
       where: {
         id: req.params.id,
       },
     });
-
-    if (!carExistById) {
+    if (!car) {
       res.status(400);
       throw new Error("The category ID you entered does not exist");
     }
 
-    //update category
-    const carDetails = await Cars.destroy({
+    //delete category
+    const result = await Cars.destroy({
       where: {
-        id: carExistById.id,
+        id: car.id,
       },
     });
-    if (!carDetails) {
+    if (!result) {
       res.status(400);
       throw new Error("Something went wrong! Cars could not be deleted.");
     }
 
     return res.status(200).json({ message: "Cars deleted successfully!" });
   } catch (error) {
+    //error handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${
@@ -173,6 +161,7 @@ const getCars = asyncHandler(async (req, res) => {
 
     return res.status(200).send(cars);
   } catch (error) {
+    //error handling
     res.status(res.statusCode ? res.statusCode : 500);
     throw new Error(
       `${
