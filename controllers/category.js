@@ -1,6 +1,8 @@
+const { literal } = require("sequelize");
 const asyncHandler = require("express-async-handler");
 const { Categories, validateCategory } = require("../models/categories");
 const { validationResult } = require("express-validator");
+const { Cars } = require("../models/cars");
 
 // @desc Create new category
 // @route POST /api/category
@@ -173,9 +175,39 @@ const getCategories = asyncHandler(async (req, res) => {
   }
 });
 
+const getTotalCars = asyncHandler(async (req, res) => {
+  try {
+    //get all categories
+    const categories = await Categories.findAll({
+      include: {
+        model: Cars,
+        as: "category_has_car",
+        attributes: [],
+      },
+      attributes: [
+        "name",
+        [literal("COUNT(`category_has_car`.`id`)"), "totalCars"],
+      ],
+      group: ["`categories`.`id`", "name"],
+    });
+
+    return res.status(200).send(categories);
+  } catch (error) {
+    res.status(res.statusCode ? res.statusCode : 500);
+    throw new Error(
+      `${
+        res.statusCode !== 400
+          ? "Something went wrong in getting total cars: "
+          : ""
+      }${error.message}`
+    );
+  }
+});
+
 module.exports = {
   createCategory,
   updateCategory,
   deleteCategory,
   getCategories,
+  getTotalCars,
 };

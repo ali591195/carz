@@ -9,6 +9,7 @@ const {
   updateCategory,
   deleteCategory,
   getCategories,
+  getTotalCars,
 } = require("../../controllers/category");
 
 route.post(
@@ -35,5 +36,7 @@ route.delete(
   deleteCategory
 );
 route.get(`/`, protect, getCategories);
+
+route.get(`/total`, protect, getTotalCars);
 
 module.exports = route;
