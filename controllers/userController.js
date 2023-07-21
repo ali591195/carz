@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const sequelize = require("../config/database");
 const asyncHandler = require("express-async-handler");
 const { Users, validateUser } = require("../models/users");
@@ -82,9 +83,15 @@ const createUser = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error("User already exists with same email address");
     }
+
+    // generate password
+    const randomPass = generateRandomPassword(15);
+
     //encrypt password
     const salt = await bcrypt.genSalt(10);
-    userDetail.password = await bcrypt.hash(userDetail.password, salt);
+    const encryptPass = await bcrypt.hash(randomPass, salt);
+
+    userDetail.password = encryptPass;
 
     //create user
     const userDetails = await userCreation(userDetail);
@@ -94,8 +101,9 @@ const createUser = asyncHandler(async (req, res) => {
       throw new Error("User could not be created!");
     }
 
+    userDetail.password = randomPass;
     //now send the mail with randomly generated password
-    const mailSend = sendEmail(userDetail);
+    sendEmail(userDetail);
     return res.status(200).json({ message: "User created successfully!" });
   } catch (error) {
     res.status(res.statusCode ? res.statusCode : 500);
@@ -521,15 +529,14 @@ const findUser = (email) => {
 };
 
 // create user
-const userCreation = (userDetail) => {
-  return Users.create(userDetail)
-    .then((result) => {
-      return result;
-    })
-    .catch((error) => {
-      throw new Error(error);
-    });
-};
+async function userCreation(userDetail) {
+  try {
+    const result = await Users.create(userDetail);
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 
 //function to send mail with randomly generated password
 const sendEmail = (recipient) => {
@@ -547,7 +554,7 @@ const sendEmail = (recipient) => {
     from: "your_email@gmail.com",
     to: recipient.email,
     subject: `Welcome to Carz`,
-    text: `Hello ${recipient.name}, you have recently registered to our system, here is your Password: ${recipient.password}.`,
+    text: `Hello ${recipient.full_name}, you have recently registered to our system, here is your Password: ${recipient.password}.`,
   };
 
   //send mail
@@ -559,6 +566,20 @@ const sendEmail = (recipient) => {
     }
   });
 };
+
+function generateRandomPassword(length) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const randomBytes = crypto.randomBytes(length);
+  let password = "";
+
+  for (let i = 0; i < length; i++) {
+    const index = randomBytes[i] % characters.length;
+    password += characters.charAt(index);
+  }
+
+  return password;
+}
 
 module.exports = {
   createUser,

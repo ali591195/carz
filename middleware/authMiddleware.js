@@ -14,11 +14,7 @@ const protect = asyncHandler(async (req, res, next) => {
       //Get user from token
       req.result = await Users.findOne({
         where: {
-          [Op.and]: [
-            { id: decoded.id },
-            { email_verified: true },
-            { active: true },
-          ],
+          [Op.and]: [{ id: decoded.id }],
         },
         attributes: { exclude: ["password"] },
       });

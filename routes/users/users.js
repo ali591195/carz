@@ -18,7 +18,11 @@ const {
 route.post(
   "/login",
   [
-    body("email").isEmail().withMessage("Please enter a valid email"),
+    body("email")
+      .isEmail()
+      .trim()
+      .escape()
+      .withMessage("Please enter a valid email"),
     body("password")
       .isLength({ min: 5 })
       .withMessage("Password field cannot be empty"),
@@ -29,11 +33,16 @@ route.post(
 route.post(
   "/",
   [
-    body("full_name").isString().withMessage("Please enter your name"),
-    body("email").isEmail().withMessage("Please enter a valid email"),
-    body("password")
-      .isLength({ min: 5 })
-      .withMessage("Password field cannot be empty"),
+    body("full_name")
+      .isString()
+      .trim()
+      .escape()
+      .withMessage("Please enter your name"),
+    body("email")
+      .isEmail()
+      .trim()
+      .escape()
+      .withMessage("Please enter a valid email"),
   ],
   createUser
 );

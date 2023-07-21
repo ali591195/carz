@@ -26,12 +26,12 @@ app.use(cors());
 association();
 app.use("/api/sync-database", sync);
 app.use("/api/users", user);
+app.use("/api/category", category);
 
 app.use("/api/seeder", seeder);
 app.use("/api/store", store);
 app.use("/api/shipping_charges", shippingCharges);
 app.use("/api/market_place", marketPlace);
-app.use("/api/category", category);
 app.use("/api/vat_and_referralfee", vatAndReferralfee);
 app.use("/api/orders", orders);
 app.use("/api/huntings", huntings);
