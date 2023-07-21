@@ -15,6 +15,7 @@ const marketPlace = require("./routes/marketplaces/marketplaces");
 const category = require("./routes/category/category");
 const vatAndReferralfee = require("./routes/vatAndReferralfee/vatAndReferralfee");
 const seeder = require("./routes/seeder/seeder");
+const car = require("./routes/cars");
 const { association } = require("./controllers/association");
 
 app = express();
@@ -27,6 +28,7 @@ association();
 app.use("/api/sync-database", sync);
 app.use("/api/users", user);
 app.use("/api/category", category);
+app.use("/api/car", car);
 
 app.use("/api/seeder", seeder);
 app.use("/api/store", store);
