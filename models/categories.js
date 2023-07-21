@@ -1,7 +1,10 @@
-const DataTypes = require("sequelize").DataTypes;
-const Sequelize = require("sequelize"),
-  sequelize = require("../config/database");
 const Joi = require("joi");
+const Sequelize = require("sequelize");
+const { DataTypes } = require("sequelize");
+
+const sequelize = require("../config/database");
+
+//category model
 const Categories = sequelize.define(
   "categories",
   {
@@ -38,6 +41,8 @@ const Categories = sequelize.define(
     ],
   }
 );
+
+//joi validation
 function validateCategory(category) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
@@ -45,6 +50,8 @@ function validateCategory(category) {
   return schema.validate(category);
 }
 
+//id generation
 Categories.beforeCreate((category) => (category.id = Sequelize.UUIDV4));
+
 exports.Categories = Categories;
 exports.validateCategory = validateCategory;

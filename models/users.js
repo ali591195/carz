@@ -1,7 +1,10 @@
-const DataTypes = require("sequelize").DataTypes;
-const Sequelize = require("sequelize"),
-  sequelize = require("../config/database");
 const Joi = require("joi");
+const Sequelize = require("sequelize");
+const { DataTypes } = require("sequelize");
+
+const sequelize = require("../config/database");
+
+//user model
 const Users = sequelize.define(
   "users",
   {
@@ -47,6 +50,8 @@ const Users = sequelize.define(
     ],
   }
 );
+
+//joi validation
 function validateUser(user) {
   const schema = Joi.object({
     full_name: Joi.string().required(),
@@ -59,6 +64,8 @@ function validateUser(user) {
   return schema.validate(user);
 }
 
+//id generation
 Users.beforeCreate((user) => (user.id = Sequelize.UUIDV4));
+
 exports.Users = Users;
 exports.validateUser = validateUser;

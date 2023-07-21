@@ -1,7 +1,10 @@
-const DataTypes = require("sequelize").DataTypes;
-const Sequelize = require("sequelize"),
-  sequelize = require("../config/database");
 const Joi = require("joi");
+const Sequelize = require("sequelize");
+const { DataTypes } = require("sequelize");
+
+const sequelize = require("../config/database");
+
+//car model
 const Cars = sequelize.define(
   "cars",
   {
@@ -62,6 +65,8 @@ const Cars = sequelize.define(
     ],
   }
 );
+
+//joi validation
 function validateCars(car) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
@@ -74,6 +79,8 @@ function validateCars(car) {
   return schema.validate(car);
 }
 
+// id generation
 Cars.beforeCreate((car) => (car.id = Sequelize.UUIDV4));
+
 exports.Cars = Cars;
 exports.validateCars = validateCars;
