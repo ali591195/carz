@@ -157,7 +157,7 @@ const getCars = asyncHandler(async (req, res) => {
         as: "car_category",
         attributes: ["id", "name"],
       },
-      attributes: ["id", "name"],
+      attributes: ["id", "name", "reg_no", "model", "color"],
     });
 
     return res.status(200).send(cars);
